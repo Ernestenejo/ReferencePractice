@@ -1,7 +1,7 @@
 const express = require('express');
 require("dotenv").config();
 const DATABASE_URL = process.env.DATABASE_URL;
-console.log(DATABASE_URL);
+// console.log(DATABASE_URL);
 const mongoose = require ('mongoose');
 const router = require('./router/schoolrouter')
 const  studentRouter = require('./router/studentrouter')
