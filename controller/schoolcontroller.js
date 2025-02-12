@@ -25,8 +25,8 @@ exports.createSchool = async (req, res)=>{
             address,
             email,
             department,
-            studentImageUrl: uploadImage.secure_url,
-            studentImageId: uploadImage.public_id
+            schoolImageUrl: uploadImage.secure_url,
+            schoolImageId: uploadImage.public_id
         }
         fs.unlink(req.file.path, (err)=>{
             if(err){
@@ -65,6 +65,58 @@ exports.getallschool = async (req, res) => {
         })
     }
 } 
+
+exports.changeDP = async (req, res) =>{
+    try{
+        const {id} = req.params;
+        const findSchool = await schoolModel.findById(id);
+console.log("somto is not active today")
+        if(!findSchool){
+            return res.status(404).json({
+                message: "School Not Found"
+            })
+        }
+
+        //This gets the image file from Cloudinary via the file path
+const cloudImage = await cloudinary.uploader.upload(req.file.path, (err)=>{
+    if(err){
+        return res.status(404).json({
+            message: err.message
+        })
+    }
+})
+        const newPhoto = {
+            schoolImageUrl: cloudImage.secure_url, 
+            schoolImageId: cloudImage.public_id
+        }
+
+        const delImage = await cloudinary.uploader.destroy(findSchool.schoolImageId, (err)=>{
+            if(err){
+                return res.status(404).json({
+                    message: err.message
+                })
+            }
+        })
+
+        fs.unlink(req.file.path, (err)=>{
+            if(err){
+                console.log(err.message)
+            }else{
+                console.log("Previous File Removed Successfully")
+            }
+        })
+
+        const updateImage = await schoolModel.findByIdAndUpdate(id, newPhoto, {new: true})
+        return res.status(200).json({
+            message: "Image Successfully Updated"
+        })
+    }catch(err){
+        res.status(500).json({
+            message: "Internal Server Error" + err.message,
+
+        })
+    }
+}
 
 
 

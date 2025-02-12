@@ -18,10 +18,10 @@ const schoolSchema = new mongoose.Schema({
         type: String,
         unique: true
     },
-    studentImageUrl: {
+    schoolImageUrl: {
         type: String
     },
-    studentImageId: {
+    schoolImageId: {
         type: String
     },
     dateCreated: {
