@@ -13,6 +13,19 @@ const studentSchema = new mongoose.Schema({
     phoneNumber:{
         type:String
     },
+    studentImageUrl:{
+               type:String
+    },
+    studentImageId:{
+          type:String
+    },
+    dateCreated:{
+        type:Date,
+        default:()=>{ const date = new Date
+            return date.toISOString()
+        }
+    },
+
     school:{
         type:mongoose.Schema.Types.ObjectId,
         ref:'school'
