@@ -15,14 +15,21 @@ const schoolSchema = new mongoose.Schema({
 
     },
     email: {
+        type: String
+    },
+    password:{
         type: String,
-        unique: true
+        required:true
     },
     schoolImageUrl: {
         type: String
     },
     schoolImageId: {
         type: String
+    },
+    isVerified:{
+        type: Boolean,
+        default:false
     },
     dateCreated: {
         type: Date,
