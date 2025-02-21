@@ -1,7 +1,11 @@
 const router = require ('express').Router()
 const {checkRole} = require('../middleware/authorization')
 
-const {createSchool, getallschool, getOneSchool, changeDP, verifyMail, userLogin, confirmAdmin, forgotPassword,resetPassword} = require('../controller/schoolcontroller')
+
+const {createSchool, getallschool, getOneSchool, changeDP, verifyMail, userLogin, confirmAdmin, forgotPassword, resetPassword} = require('../controller/schoolcontroller')
+
+
+
 const upload = require ('../helper/multer')
 router.post('/school',checkRole, upload.single("photo"),createSchool);
 router.patch('/school/:id',upload.single("photo"), changeDP);

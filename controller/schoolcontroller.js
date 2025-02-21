@@ -214,6 +214,8 @@ exports.confirmAdmin = async (req, res)=>{
     }
 }
 
+
+
 exports.forgotPassword = async (req, res) => {
     try {
       const { email } = req.body;
@@ -253,6 +255,13 @@ exports.forgotPassword = async (req, res) => {
       res.status(500).json({ message: error.message });
     }
   };
+
+
+
+
+
+
+
 
 
 
