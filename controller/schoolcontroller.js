@@ -214,122 +214,45 @@ exports.confirmAdmin = async (req, res)=>{
     }
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-exports.getallschool = async (req, res) =>{
+exports.forgotPassword = async (req, res) => {
     try {
-        const findallschool = await schoolModel.find()
-        res.status(200).json({
-            message: `All School in Database`,
-            data:findallschool
-        })
-    } catch (error) {
-        res.status(500).json({
-            message:error.message 
-        })
+      const { email } = req.body;
+      const user = await schoolModel.findOne({ email: email.toLowerCase() });
+      if (!user) return res.status(404).json({ message: "Email not found" });
+  
+      const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: "10m" });
+      const link = `${req.protocol}://${req.get("host")}/reset-password/${user._id}/${token}`;
       
-    }
-}
-
-exports.getOneSchool = async (req, res)=>{
-    try {
-        const {id} = req.params
-        const findSchool = await schoolModel.find(id)
-        if(!findSchool) {
-            res.status(404).json({
-                message:`school not found`
-            })
-        }else{
-            res.status(200).json({
-                message:`school found`,
-                data: findSchool
-            })
-        }
+      sendMail({
+        subject: "Password Reset Request",
+        email: user.email,
+        html: `Click the link to reset your password: <a href='${link}'>Reset Password</a>`
+      });
+      
+      res.status(200).json({ message: "Password reset link sent to email" });
     } catch (error) {
-        res.status(500).json({
-            message:error.message 
-        }) 
+      res.status(500).json({ message: error.message });
     }
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-exports.getOneSchool = async (req, res) =>{
+  };
+  
+  exports.resetPassword = async (req, res) => {
     try {
-        const { id } = req.params
-        const findSchool = await schoolModel.findById(id)
-        if (!findSchool) {
-            res.status(404).json({
-             message: `school not found`   
-            })
-        }  
-        else {
-            res.status(200).json({
-            message: `school found`,
-            data: findSchool 
-            })
-        }
+      const { id, token } = req.params;
+      const { newPassword } = req.body;
+      
+      jwt.verify(token, process.env.JWT_SECRET, async (error) => {
+        if (error) return res.status(400).json({ message: "Invalid or expired token" });
         
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(newPassword, salt);
+        await schoolModel.findByIdAndUpdate(id, { password: hashedPassword });
+        
+        res.status(200).json({ message: "Password reset successfully" });
+      });
     } catch (error) {
-        res.status(500).json({
-            message: error.message 
-        })
-      
+      res.status(500).json({ message: error.message });
     }
-}
+  };
 
 
 
@@ -350,20 +273,3 @@ exports.getOneSchool = async (req, res) =>{
 
 
 
-
-
-// exports.getallschool = async (req,res) =>{
-//     try {
-//         const findallschool = await schoolModel.find().populate("students", "name gender phoneNumber -_id");
-//         res.status(200).json({
-//             message:"All school found",
-//             data:findallschool
-
-//         })
-//     } catch (error) {
-//         //console.log("internal server error");
-//         res.status(500).json({
-//             message:error.message
-//         }) 
-//     }
-// }
