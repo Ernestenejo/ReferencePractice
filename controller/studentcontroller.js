@@ -55,3 +55,24 @@ exports.getOnestudent = async (req, res) => {
         })
     }
 }
+
+exports.updateStudent = async (req, res) => {
+    try{
+        const { id } = req.params;
+        const findStudent = await studentModel.findByIdAndUpdate(id, req.body, {new: true});
+        if(!findStudent){
+            return res.status(404).json({
+                message: "Student not found"
+            })
+        }
+        res.status(200).json({
+            message: "Student updated successfully",
+            data: findStudent
+        })
+
+    }catch(error){
+        res.status(500).json({
+            message: error.message
+        })
+    }
+}
