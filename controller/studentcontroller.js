@@ -66,7 +66,7 @@ exports.updateStudent = async (req, res) => {
             })
         }
         res.status(200).json({
-            message: "Student updated successfully",
+            message: "Student updated  successfully",
             data: findStudent
         })
 
