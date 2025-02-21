@@ -31,6 +31,15 @@ const schoolSchema = new mongoose.Schema({
         type: Boolean,
         default:false
     },
+    isAdmin:{
+        type:Boolean,
+        default:false
+    },
+    isSuperAdmin:{
+        type:Boolean,
+        default:false
+    },
+
     dateCreated: {
         type: Date,
         default: () => {

@@ -19,10 +19,10 @@ exports.createStudent = async (req, res) => {
 
         newstudent.school = req.params.id
 
-        await newstudent.save()
+        // await newstudent.save()
         
-        findSchool.students.push(newstudent._id)
-        await findSchool.save()
+        // findSchool.students.push(newstudent._id)
+        // await findSchool.save()
         res.status(201).json({
             message: 'student created successfully',
             data: newstudent

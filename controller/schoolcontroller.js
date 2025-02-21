@@ -7,7 +7,6 @@ const signup = require('../helper/signUp');
 const bcrypt = require('bcryptjs');
 
 
-
 exports.createSchool = async (req, res)=>{
     try {
         // console.log(req);
@@ -196,6 +195,21 @@ const cloudImage = await cloudinary.uploader.upload(req.file.path, (err)=>{
         res.status(500).json({
             message: "Internal Server Error" + err.message,
 
+        })
+    }
+}
+
+exports.confirmAdmin = async (req, res)=>{
+    try{
+        const comfirmAdmin = await schoolModel.findByIdAndUpdate(req.params.id, {isAdmin:true}, {new:true})
+        
+        res.status(200).json({
+            message:" The User is now an Admin"
+        })
+
+    }catch(error){
+        res.status(500).json({
+            message:error.message
         })
     }
 }
