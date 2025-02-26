@@ -26,5 +26,7 @@ exports.checkLogins = async (req, res, next) =>{
             message: "School Not Found"
         })
     }
+    req.user = checkUser
     next()
+   
 }

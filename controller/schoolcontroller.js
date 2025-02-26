@@ -12,14 +12,14 @@ exports.createSchool = async (req, res)=>{
         // console.log(req);
         const {fullName, address, password, email, department} =req.body
         
-        const uploadImage = await cloudinary.uploader.upload(req.file.path, (err)=>{
-            if(err){
-                return res.status(400).json({
-                    message: "This is a wrong image" + err.message
+        // const uploadImage = await cloudinary.uploader.upload(req.file.path, (err)=>{
+        //     if(err){
+        //         return res.status(400).json({
+        //             message: "This is a wrong image" + err.message
 
-                })
-            }
-        })
+        //         })
+        //     }
+        // })
         const salt = await bcrypt.genSaltSync(10);
         const hash = await bcrypt.hashSync(password, salt);
 // Store hash in your password DB.
@@ -30,16 +30,16 @@ exports.createSchool = async (req, res)=>{
             password: hash,
             email:email.toLowerCase(), 
             department,
-            schoolImageUrl: uploadImage.secure_url,
-            schoolImageId: uploadImage.public_id
+            // schoolImageUrl: uploadImage.secure_url,
+            // schoolImageId: uploadImage.public_id
         }
-        fs.unlink(req.file.path, (err)=>{
-            if(err){
-                console.log(err.message)
-            }else{
-                console.log("File Removed Successfully")
-            }
-        })
+        // fs.unlink(req.file.path, (err)=>{
+        //     if(err){
+        //         console.log(err.message)
+        //     }else{
+        //         console.log("File Removed Successfully")
+        //     }
+        // })
         const newSchool = await schoolModel.create(data);
         const token = await jwt.sign({id:newSchool._id}, "secret_key", {expiresIn: '3mins'})
         // console.log(token)
@@ -98,8 +98,9 @@ exports.userLogin = async (req, res) => {
             return res.status(404).json({
                 message: "Email not found"
             })
-        }
-        const checkPassword = await bcrypt.compare(passWord, checkEmail.password)
+        }console.log(checkEmail)
+        const checkPassword = await bcrypt.compare(passWord, checkEmail. password)
+        console.log(checkPassword)
         if(!checkPassword){
             return res.status(400).json({
                 message:" InCorrect Password"
